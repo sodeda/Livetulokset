@@ -131,7 +131,8 @@ def print_table(conf, data):
 path = "C:/Users/soder/Downloads/chromedriver_win32/chromedriver"
 
 # asks what league table to show from user
-asked_table = input("KHL(1) or Liiga(2)? ")
+# asked_table = input("KHL(1) or Liiga(2)? ")
+asked_table = 1
 
 # if user wants KHL
 if asked_table == "1":
