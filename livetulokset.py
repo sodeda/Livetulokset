@@ -30,7 +30,7 @@ def split_table(table):
         rivi = i.split() # splits from whitespaces
         rivit.append(rivi)
     rivit.pop(0) # removes the first one, which is unwanted    
-    
+
     teams = []
     games = []
     points = []
@@ -41,27 +41,33 @@ def split_table(table):
         
         # checks how many words in team name, so correct index for games column is found
         try:
-            int(rivi[1])
-        except:
-            team = team + " " + rivi[1]
-            game_index = 2
-        try:
-            int(rivi[2])
-        except:
-            team = team + " " + rivi[2]
-            game_index = 3
+            rivi[1]
             
-        point_index = -1
-        for i in rivi:
-            # points column is one before "?"
-            if i != "?":
-                point_index = point_index + 1
-            else:
-                break
+            try:
+                int(rivi[1])
+            except:
+                team = team + " " + rivi[1]
+                game_index = 2
+            try:
+                int(rivi[2])
+            except:
+                team = team + " " + rivi[2]
+                game_index = 3
+                
+            point_index = -1
+            for i in rivi:
+                # points column is one before "?"
+                if i != "?":
+                    point_index = point_index + 1
+                else:
+                    break
         
-        teams.append(team)        
-        games.append(rivi[game_index])
-        points.append(rivi[point_index])
+            teams.append(team)        
+            games.append(rivi[game_index])
+            points.append(rivi[point_index])
+        
+        except:
+            pass
         
     return teams, games, points
         
@@ -131,8 +137,7 @@ def print_table(conf, data):
 path = "C:/Users/soder/Downloads/chromedriver_win32/chromedriver"
 
 # asks what league table to show from user
-# asked_table = input("KHL(1) or Liiga(2)? ")
-asked_table = 1
+asked_table = input("KHL(1) or Liiga(2) or NHL(3)? ")
 
 # if user wants KHL
 if asked_table == "1":
@@ -166,6 +171,34 @@ elif asked_table == "2":
     print_table("LIIGA", data)   
     
     browser.quit()
+    
+elif asked_table == "3":    
+    url = 'https://www.livetulokset.com/sarjataulukko/lUtSgDm3/tfLHSwA6/#table/overall'
+    browser = webdriver.Chrome(executable_path=path)
+    browser.get(url)
+    
+    xpath = '//*[@id="tournament-table-tabs-and-content"]/div[3]/div[1]/div[5]/div/div[2]'
+    data = get_data(browser, xpath)
+    league = []
+    league = add_to_league_table(data)
+    print_table("Läntinen Divisioona", data)
+    
+    xpath = '//*[@id="tournament-table-tabs-and-content"]/div[3]/div[1]/div[4]/div/div[2]'
+    data = get_data(browser, xpath)
+    league = add_to_league_table(data)
+    print_table("Pohjoinen Divisioona", data)
+    
+    xpath = '//*[@id="tournament-table-tabs-and-content"]/div[3]/div[1]/div[3]/div/div[2]'
+    data = get_data(browser, xpath)
+    league = add_to_league_table(data)
+    print_table("Itäinen Divisioona", data)
+    
+    xpath = '//*[@id="tournament-table-tabs-and-content"]/div[3]/div[1]/div[2]/div/div[2]'
+    data = get_data(browser, xpath)
+    league = add_to_league_table(data)
+    print_table("Keskinen Divisioona", data)
+    
+    print_table("NHL", league)
 
 # loops if wrong input                
 else:
